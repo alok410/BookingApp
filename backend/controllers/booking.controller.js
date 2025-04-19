@@ -110,7 +110,7 @@ const createBooking = async (req, res) => {
 
 const getBookingsByUser = async (req, res) => {
     const userId = req.params.userId;  
-  
+    console.log("hoti")
     if (!userId) {
       return res.status(400).json({ message: 'Missing userId in URL params.' });
     }

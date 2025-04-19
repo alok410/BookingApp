@@ -6,11 +6,10 @@ const Bookings = () => {
   const dispatch = useDispatch();
   const { bookings, status, error } = useSelector((state) => state.booking);
 
-  // Assume userId is available or comes from the logged-in user
-  const userId = 1; // Replace with actual user ID, possibly from auth state or context
+  const userId = 1; 
 
   useEffect(() => {
-    dispatch(getBookingsByUser(userId)); // Fetch bookings for the user
+    dispatch(getBookingsByUser(userId)); 
   }, [dispatch, userId]);
 
   if (status === 'loading') {
@@ -27,7 +26,6 @@ const Bookings = () => {
       <ul>
         {bookings.map((booking) => (
           <li key={booking.id}>
-            {/* Render booking details here */}
             {booking.details}
           </li>
         ))}

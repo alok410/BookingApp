@@ -111,9 +111,8 @@ const createBooking = async (req, res) => {
   }
 };
 
-// Get bookings for a user
 const getBookingsByUser = async (req, res) => {
-  const userId = req.query.userId; // now using query param for flexibility
+  const userId = req.query.userId; 
 
   if (!userId) {
     return res.status(400).json({ message: 'Missing userId in query.' });

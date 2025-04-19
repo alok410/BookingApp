@@ -1,6 +1,5 @@
 import api from './api';
 
-// Function for user signup
 export const signUpUser = async (userData) => {
   try {
     const response = await api.post('/auth/signup', userData);
@@ -10,7 +9,6 @@ export const signUpUser = async (userData) => {
   }
 };
 
-// Function for user login
 export const loginUser = async (userData) => {
   try {
     console.log("userData")

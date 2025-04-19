@@ -1,6 +1,7 @@
-import React, { use, useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createBooking } from '../redux/bookingSlice';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 const BookingForm = () => {
   const [customerName, setCustomerName] = useState('');
@@ -14,11 +15,13 @@ const BookingForm = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth); // Access user from Redux
 
+  const navigate = useNavigate(); // Initialize useNavigate
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-   console.log(user.id)
-
+  
+    console.log(user.id);
+  
     const payload = {
       customerName,
       customerEmail,
@@ -27,21 +30,26 @@ const BookingForm = () => {
       bookingSlot,
       fromTime,
       toTime,
-      userId: user.id, // Use logged-in user's ID
+      userId: user.id, 
     };
-
+  
     console.log('Attempting to submit booking:', payload);
-
+  
     try {
       const response = await dispatch(createBooking(payload)).unwrap();
       console.log('Booking successful:', response);
       alert('Booking submitted successfully!');
+      navigate('/bookings'); 
     } catch (error) {
       console.error('Booking submission failed:', error);
-      alert('Booking submission failed! Check console for details.');
+      if (error.message.includes("Full Day booking already")) {
+        alert("Error: A Full Day booking already exists for this date. Please select a different date.");
+      } else {
+        alert('Booking submission failed! Check console for details.');
+      }
     }
   };
-
+  
   const formStyle = {
     maxWidth: '400px',
     margin: '40px auto',

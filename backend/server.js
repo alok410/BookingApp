@@ -3,12 +3,15 @@ const express = require("express");
 const app = express();
 require("dotenv").config();
 const authRoutes = require("./routes/auth.route");
+const bookingRoutes = require("./routes/booking.route");
+
 
 // Import db models and sequelize instance
 const { sequelize } = require("./models"); // Correctly importing sequelize from models
 
 app.use(express.json());
 app.use("/api/auth", authRoutes);
+app.use("/api/bookings",bookingRoutes)
 
 // Sync DB
 sequelize.sync()

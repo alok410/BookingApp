@@ -6,14 +6,11 @@ const authRoutes = require("./routes/auth.route");
 const bookingRoutes = require("./routes/booking.route");
 
 
-// Import db models and sequelize instance
-const { sequelize } = require("./models"); // Correctly importing sequelize from models
-
+const { sequelize } = require("./models"); 
 app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/bookings",bookingRoutes)
 
-// Sync DB
 sequelize.sync()
   .then(() => {
     console.log("Database synced successfully.");
@@ -21,5 +18,5 @@ sequelize.sync()
   })
   .catch((err) => {
     console.error("Error syncing database:", err);
-    process.exit(1); // Exit the process if the sync fails
+    process.exit(1); 
   });

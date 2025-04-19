@@ -95,13 +95,12 @@ const createBooking = async (req, res) => {
   }
 };
 
-// Get all bookings for a user (optional: for dashboard or profile)
 const getBookingsByUser = async (req, res) => {
-  const userId = req.user.id; // Assuming userId is in the request (authenticated)
+  const userId = req.user.id; 
 
   try {
     const bookings = await Booking.findAll({ where: { userId } });
-    res.status(200).json(bookings);
+    res.status(200).json(bookings);yield
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'An error occurred while fetching bookings.' });

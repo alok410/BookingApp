@@ -14,7 +14,7 @@ const Booking = sequelize.define('Booking', {
     },
   },
   bookingDate: {
-    type: DataTypes.DATEONLY, // Only date, no time part
+    type: DataTypes.DATEONLY,
     allowNull: false,
   },
   bookingType: {
@@ -24,12 +24,10 @@ const Booking = sequelize.define('Booking', {
   bookingSlot: {
     type: DataTypes.ENUM('First Half', 'Second Half'),
     allowNull: true,
-    // Only valid if bookingType is 'Half Day'
   },
   fromTime: {
     type: DataTypes.TIME,
     allowNull: true,
-    // Only valid if bookingType is 'Custom'
   },
   toTime: {
     type: DataTypes.TIME,
@@ -37,17 +35,17 @@ const Booking = sequelize.define('Booking', {
   },
   userId: {
     type: DataTypes.INTEGER,
-    allowNull: false, // Assume this links to the User who created the booking
+    allowNull: false, 
   },
 }, {
   indexes: [
     {
       name: 'booking_date_index',
-      fields: ['bookingDate'], // Index for faster overlap lookup
+      fields: ['bookingDate'],
     },
     {
       name: 'user_id_index',
-      fields: ['userId'], // Helpful if filtering bookings by user
+      fields: ['userId'], 
     },
   ],
 });

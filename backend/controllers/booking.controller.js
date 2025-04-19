@@ -4,7 +4,16 @@ const { Op } = require('sequelize');
 
 // Create a new booking
 const createBooking = async (req, res) => {
-  const { customerName, customerEmail, bookingDate, bookingType, bookingSlot, fromTime, toTime, userId } = req.body;
+  const {
+    customerName,
+    customerEmail,
+    bookingDate,
+    bookingType,
+    bookingSlot,
+    fromTime,
+    toTime,
+    userId,
+  } = req.body;
 
   // Validate required fields
   if (!customerName || !customerEmail || !bookingDate || !bookingType || !userId) {
@@ -12,31 +21,33 @@ const createBooking = async (req, res) => {
   }
 
   try {
-    const bookingDateMoment = moment(bookingDate).startOf('day');
-    const formattedBookingDate = bookingDateMoment.format('YYYY-MM-DD');
+    const formattedBookingDate = moment(bookingDate).startOf('day').format('YYYY-MM-DD');
 
-    // General query options to avoid repeating code
+    // General query base
     const queryOptions = {
       where: { bookingDate: formattedBookingDate },
     };
 
-    // Check for conflicts based on booking type
     if (bookingType === 'Full Day') {
       queryOptions.where.bookingType = 'Full Day';
       const fullDayBooking = await Booking.findOne(queryOptions);
       if (fullDayBooking) {
         return res.status(400).json({ message: 'Full Day booking already exists for this date.' });
       }
+
     } else if (bookingType === 'Half Day') {
-      // Check for Half Day conflict in the selected slot
+      if (!bookingSlot) {
+        return res.status(400).json({ message: 'Please select a slot for Half Day booking.' });
+      }
+
       queryOptions.where.bookingType = 'Half Day';
       queryOptions.where.bookingSlot = bookingSlot;
+
       const halfDayBooking = await Booking.findOne(queryOptions);
       if (halfDayBooking) {
         return res.status(400).json({ message: `Booking Slot ${bookingSlot} is already taken for this date.` });
       }
 
-      // Check for Full Day or Custom overlap with Half Day booking slots
       const customBookingOverlap = await Booking.findOne({
         where: {
           bookingDate: formattedBookingDate,
@@ -44,18 +55,23 @@ const createBooking = async (req, res) => {
             { bookingType: 'Full Day' },
             {
               bookingType: 'Custom',
-              fromTime: { [Op.lte]: toTime }, // Overlap check for fromTime
-              toTime: { [Op.gte]: fromTime }, // Overlap check for toTime
+              fromTime: { [Op.lte]: toTime },
+              toTime: { [Op.gte]: fromTime },
             },
           ],
         },
       });
+
       if (customBookingOverlap) {
-        return res.status(400).json({ message: 'Booking overlap detected. Cannot book Full Day or Custom during the selected time slot.' });
+        return res.status(400).json({ message: 'Booking overlap detected. Cannot book during this slot.' });
       }
+
     } else if (bookingType === 'Custom') {
-      // Check for Custom booking time overlap
-      const timeOverlapBooking = await Booking.findOne({
+      if (!fromTime || !toTime) {
+        return res.status(400).json({ message: 'Please provide both From Time and To Time for Custom booking.' });
+      }
+
+      const overlap = await Booking.findOne({
         where: {
           bookingDate: formattedBookingDate,
           bookingType: 'Custom',
@@ -68,20 +84,19 @@ const createBooking = async (req, res) => {
         },
       });
 
-      if (timeOverlapBooking) {
+      if (overlap) {
         return res.status(400).json({ message: 'Custom booking time overlaps with an existing booking.' });
       }
     }
 
-    // Create new booking if no conflict
     const newBooking = await Booking.create({
       customerName,
       customerEmail,
       bookingDate: formattedBookingDate,
       bookingType,
-      bookingSlot: bookingType === 'Half Day' ? bookingSlot : null, // Half Day should have a slot
-      fromTime: bookingType === 'Custom' ? fromTime : null, // Custom should have fromTime
-      toTime: bookingType === 'Custom' ? toTime : null, // Custom should have toTime
+      bookingSlot: bookingType === 'Half Day' ? bookingSlot : null,
+      fromTime: bookingType === 'Custom' ? fromTime : null,
+      toTime: bookingType === 'Custom' ? toTime : null,
       userId,
     });
 
@@ -89,18 +104,24 @@ const createBooking = async (req, res) => {
       message: 'Booking created successfully!',
       booking: newBooking,
     });
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'An error occurred while creating the booking.' });
   }
 };
 
+// Get bookings for a user
 const getBookingsByUser = async (req, res) => {
-  const userId = req.user.id; 
+  const userId = req.query.userId; // now using query param for flexibility
+
+  if (!userId) {
+    return res.status(400).json({ message: 'Missing userId in query.' });
+  }
 
   try {
     const bookings = await Booking.findAll({ where: { userId } });
-    res.status(200).json(bookings);yield
+    res.status(200).json(bookings);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'An error occurred while fetching bookings.' });

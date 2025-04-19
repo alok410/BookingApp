@@ -1,0 +1,33 @@
+my-booking-app/
+├── public/                    # Public assets like index.html, images, etc.
+│   └── index.html
+├── src/                       
+│   ├── assets/                # Static files like images, icons, fonts, etc.
+│   │   └── logo.png
+│   ├── components/            # Reusable components (buttons, forms, etc.)
+│   │   ├── BookingForm.jsx    # Booking form component
+│   │   ├── Login.jsx          # Login form component
+│   │   ├── SignUp.jsx         # Sign up form component
+│   │   ├── Header.jsx         # Header component (for navigation)
+│   │   └── Footer.jsx         # Footer component
+│   ├── redux/                 # Redux setup (actions, reducers, store)
+│   │   ├── authSlice.js       # Auth slice for handling authentication state
+│   │   ├── bookingSlice.js    # Booking slice for handling booking state
+│   │   └── store.js           # Redux store setup
+│   ├── pages/                 # Page components for different routes
+│   │   ├── Home.jsx           # Home page (view existing bookings and add new)
+│   │   ├── Bookings.jsx       # Bookings page (view bookings with more details)
+│   │   ├── NotFound.jsx       # 404 Page Not Found
+│   │   └── Profile.jsx        # Profile page (optional for managing user details)
+│   ├── services/              # API calls (axios instances and other services)
+│   │   ├── api.js             # API utility file for handling requests (axios)
+│   │   └── authService.js     # Auth service for login/signup
+│   ├── App.js                 # Main app component (with routing)
+│   ├── index.js               # Entry point of the React application
+│   └── styles/                # Global styles and custom CSS
+│       ├── App.css            # Global styles for the whole app
+│       └── index.css          # Main index styles for the app
+├── .gitignore                 # Git ignore file
+├── package.json               # Project dependencies and scripts
+├── README.md                  # Project README with setup and usage instructions
+└── node_modules/     

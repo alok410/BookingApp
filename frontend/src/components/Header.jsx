@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import Logout from './Logout';
 
 const Header = () => {
-  const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+  const { isLoggedIn, user } = useSelector(state => state.auth);
 
   const navStyle = {
     backgroundColor: '#333',
@@ -38,7 +38,9 @@ const Header = () => {
 
           {isLoggedIn ? (
             <>
-              <li style={liStyle}><Link to="/bookings" style={linkStyle}>Bookings</Link></li>
+              <li style={liStyle}>
+                <Link to={`/bookings/${user?.id}`} style={linkStyle}>Bookings</Link>
+              </li>
               <li style={liStyle}><Link to="/profile" style={linkStyle}>Profile</Link></li>
               <li style={liStyle}><Logout /></li>
             </>

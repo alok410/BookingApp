@@ -4,6 +4,6 @@ const router = express.Router();
 
 router.post('/createBooking', createBooking);
 
-router.get('/getBookingsByUser', getBookingsByUser);
+router.get('/:userId', getBookingsByUser);
 
 module.exports = router;

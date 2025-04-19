@@ -2,7 +2,6 @@ const { Booking } = require('../models');
 const moment = require('moment');
 const { Op } = require('sequelize');
 
-// Create a new booking
 const createBooking = async (req, res) => {
   const {
     customerName,
@@ -15,7 +14,6 @@ const createBooking = async (req, res) => {
     userId,
   } = req.body;
 
-  // Validate required fields
   if (!customerName || !customerEmail || !bookingDate || !bookingType || !userId) {
     return res.status(400).json({ message: 'Please fill all required fields.' });
   }
@@ -23,7 +21,6 @@ const createBooking = async (req, res) => {
   try {
     const formattedBookingDate = moment(bookingDate).startOf('day').format('YYYY-MM-DD');
 
-    // General query base
     const queryOptions = {
       where: { bookingDate: formattedBookingDate },
     };
@@ -112,19 +109,19 @@ const createBooking = async (req, res) => {
 };
 
 const getBookingsByUser = async (req, res) => {
-  const userId = req.query.userId; 
-
-  if (!userId) {
-    return res.status(400).json({ message: 'Missing userId in query.' });
-  }
-
-  try {
-    const bookings = await Booking.findAll({ where: { userId } });
-    res.status(200).json(bookings);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'An error occurred while fetching bookings.' });
-  }
-};
-
+    const userId = req.params.userId;  
+  
+    if (!userId) {
+      return res.status(400).json({ message: 'Missing userId in URL params.' });
+    }
+  
+    try {
+      const bookings = await Booking.findAll({ where: { userId } });
+      res.status(200).json(bookings);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'An error occurred while fetching bookings.' });
+    }
+  };
+  
 module.exports = { createBooking, getBookingsByUser };

@@ -15,11 +15,11 @@ export const createBooking = createAsyncThunk(
   );
   
   export const getBookingsByUser = createAsyncThunk(
-    'bookings/getBookingsByUser',
-    async (userId, { rejectWithValue }) => {
+    'bookings/:userId', 
+    async (userId, { rejectWithValue }) => { 
       try {
-        const response = await api.get(`/bookings/getBookingsByUser?userId=${userId}`);
-        return response.data;
+        const response = await api.get(`/bookings/:userId=${userId}`);
+        return response.data; 
       } catch (error) {
         return rejectWithValue(error.response?.data?.message || error.message);
       }

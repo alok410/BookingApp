@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../services/api';
 
-// 🟦 Thunk to create a new booking
 export const createBooking = createAsyncThunk(
     'bookings/createBooking',
     async (payload, { rejectWithValue }) => {

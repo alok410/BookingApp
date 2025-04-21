@@ -39,7 +39,8 @@ const BookingForm = () => {
       const response = await dispatch(createBooking(payload)).unwrap();
       console.log('Booking successful:', response);
       alert('Booking submitted successfully!');
-      navigate('/bookings'); 
+      navigate(`/bookings/${user.id}`);
+ 
     } catch (error) {
       console.error('Booking submission failed:', error);
       if (error.message.includes("Full Day booking already")) {

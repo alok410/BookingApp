@@ -1,24 +1,32 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../redux/authSlice';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setErrorMsg(''); // Clear previous error
+
     dispatch(loginUser({ email, password }))
       .unwrap()
       .then(() => {
-        navigate('/'); 
+        navigate('/');
       })
       .catch((error) => {
         console.error('Login error:', error);
+        if (error?.response?.status == 403) {
+          setErrorMsg('Not verified, please verify first');
+        } else {
+          setErrorMsg('Login failed. Please check your credentials or try again later.');
+        }
       });
   };
 
@@ -55,8 +63,15 @@ const Login = () => {
     marginTop: '10px'
   };
 
+  const errorStyle = {
+    color: 'red',
+    fontSize: '14px',
+    textAlign: 'center'
+  };
+
   return (
     <form onSubmit={handleSubmit} style={formStyle}>
+      {errorMsg && <p style={errorStyle}>{errorMsg}</p>}
       <input
         type="email"
         placeholder="Email"

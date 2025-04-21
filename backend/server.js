@@ -9,7 +9,7 @@ const { sequelize } = require("./models");
 
 // Enable CORS - You can move origin to .env if needed
 app.use(cors({
-  origin: 'http://localhost:3001',
+  origin: 'http://localhost:3000',
   credentials: true,
 }));
 

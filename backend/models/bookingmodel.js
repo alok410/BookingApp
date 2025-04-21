@@ -22,7 +22,7 @@ const Booking = sequelize.define('Booking', {
     allowNull: false,
   },
   bookingSlot: {
-    type: DataTypes.ENUM('First Half', 'Second Half'),
+    type: DataTypes.ENUM('Morning', 'Afternoon'),
     allowNull: true,
   },
   fromTime: {
